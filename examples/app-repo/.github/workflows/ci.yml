@@ -1,0 +1,22 @@
+name: ci
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  docker:
+    uses: your-org/shared-actions/.github/workflows/docker-build-push.yml@v1
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    with:
+      image_name: ghcr.io/your-org/example-app
+      context: .
+      file: ./Dockerfile
+      build_args: |
+        NODE_ENV=production
+        API_URL=${{ vars.API_URL }}
+      platforms: linux/amd64
+      push: ${{ github.event_name != 'pull_request' }}
