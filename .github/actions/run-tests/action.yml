@@ -1,0 +1,31 @@
+name: "Run Tests (composite)"
+description: "Reusable composite action to install dependencies and execute tests"
+inputs:
+  working-directory:
+    description: "Directory where the test commands should be executed"
+    default: "."
+    required: false
+  install-command:
+    description: "Optional command used to install dependencies"
+    default: ""
+    required: false
+  test-command:
+    description: "Command that runs the project's tests"
+    default: "npm test"
+    required: false
+  shell:
+    description: "Shell to use when running commands"
+    default: "bash"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      if: ${{ inputs.install-command != '' }}
+      run: ${{ inputs.install-command }}
+      shell: ${{ inputs.shell }}
+      working-directory: ${{ inputs.working-directory }}
+    - name: Run tests
+      run: ${{ inputs.test-command }}
+      shell: ${{ inputs.shell }}
+      working-directory: ${{ inputs.working-directory }}
